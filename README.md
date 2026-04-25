@@ -31,9 +31,9 @@ python hello.py
 
 ## Progress
 - [x] Day 1: Hello Ollama + streaming
-- [ ] Day 2: Conversation loop
-- [ ] Day 3: First tool
-- [ ] Day 4: Multiple tools
+- [x] Day 2: Conversation loop
+- [x] Day 3: First tool
+- [x] Day 4: Multiple tools
 - [ ] Day 5: SQLite memory
 - [ ] Day 6: Polish + refactor
 - [ ] Day 7: Prompt engineering tutorial

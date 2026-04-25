@@ -1,56 +1,29 @@
-from datetime import datetime
 from ollama import chat
+from tools import tools, handle_tool_call
 
 
-def get_current_time():
-    return datetime.now().strftime("%A, %B %d, %Y at %I:%M %p")
-
-
-tools = [
-    {
-        'type': 'function',
-        'function': {
-            'name': 'get_current_time',
-            'description': 'Get the current date and time',
-            'parameters': {
-                'type': 'object',
-                'properties': {},
-                'required': [],
-            },
-        },
-    },
-]
-
-
-def handle_tool_call(tool_call):
-    fn_name = tool_call['function']['name']
-
-    if fn_name == 'get_current_time':
-        return get_current_time()
-
-    return f"Unknown tool: {fn_name}"
-
-
-def stream_response(messages):
+def stream_response(messages, use_tools=False):
     full_content = ""
-    stream = chat(
-        model='qwen2.5:7b',
-        messages=messages,
-        stream=True,
-    )
+    kwargs = {
+        'model': 'qwen2.5:7b',
+        'messages': messages,
+        'stream': True,
+    }
+    if use_tools:
+        kwargs['tools'] = tools
 
+    stream = chat(**kwargs)
     for chunk in stream:
         content = chunk['message']['content']
         print(content, end='', flush=True)
         full_content += content
-
     print("\n")
     return full_content
 
 
 def main():
     messages = []
-    print("Jarvis v0.2 — type 'quit' to exit\n")
+    print("Jarvis v0.3 — type 'quit' to exit\n")
 
     while True:
         user_input = input("You: ").strip()
@@ -71,22 +44,26 @@ def main():
         )
 
         msg = response['message']
-        print("DEBUG msg:", msg)
-        messages.append(msg)
+        tool_calls = msg.tool_calls if hasattr(msg, 'tool_calls') else msg.get('tool_calls')
 
-        if msg.get('tool_calls'):
-            for tool_call in msg['tool_calls']:
+        if tool_calls:
+            messages.append(msg)
+            for tool_call in tool_calls:
+                fn_name = tool_call.function.name if hasattr(tool_call, 'function') else tool_call['function']['name']
                 result = handle_tool_call(tool_call)
                 messages.append({
                     'role': 'tool',
                     'content': result,
+                    'tool_name': fn_name,
                 })
 
             print("Jarvis: ", end='', flush=True)
             followup_content = stream_response(messages)
             messages.append({'role': 'assistant', 'content': followup_content})
         else:
-            print("Jarvis:", msg['content'], "\n")
+            print("Jarvis: ", end='', flush=True)
+            full_content = stream_response(messages)
+            messages.append({'role': 'assistant', 'content': full_content})
 
 
 if __name__ == '__main__':
