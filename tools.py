@@ -108,6 +108,13 @@ def handle_tool_call(tool_call):
 
     fn = dispatch.get(fn_name)
     if fn is None:
-        return f"Unknown tool: {fn_name}"
+        return f"Error: unknown tool '{fn_name}'"
 
-    return fn()
+    try:
+        return fn()
+    except Exception as e:
+        return f"Error running {fn_name}: {e}"
+
+
+def list_tool_names():
+    return ['get_current_time', 'list_mock_emails', 'list_mock_calendar']

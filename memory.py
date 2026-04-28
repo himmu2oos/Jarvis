@@ -1,9 +1,7 @@
 import sqlite3
 import json
-from pathlib import Path
 from datetime import datetime
-
-DB_PATH = Path("data/jarvis.db")
+from config import DB_PATH
 
 
 def init_db():
@@ -41,7 +39,6 @@ def load_recent(limit=20):
     )
     rows = cursor.fetchall()
     conn.close()
-
     rows.reverse()
     messages = []
     for role, content, tool_name, tool_calls in rows:
