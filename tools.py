@@ -74,8 +74,7 @@ tools = [
         'type': 'function',
         'function': {
             'name': 'list_mock_emails',
-            'description': 'List the user\'s recent emails. Returns sender, subject, snippet, received timestamp, and read status as JSON.',
-            'parameters': {
+            'description': 'List the most recent emails in the user\'s inbox. Use when the user asks about emails, messages, who emailed them, unread count, or wants to check inbox. Returns JSON with: from, subject, snippet, received timestamp, unread status. Do NOT use for sending emails or searching specific senders — only listing recent.',            'parameters': {
                 'type': 'object',
                 'properties': {},
                 'required': [],
@@ -86,7 +85,7 @@ tools = [
         'type': 'function',
         'function': {
             'name': 'list_mock_calendar',
-            'description': 'List the user\'s upcoming calendar events. Returns title, start time, end time, and attendees as JSON.',
+            'description': 'List upcoming calendar events for the user. Use when user asks about meetings, schedule, what\'s coming up, or specific events. Returns JSON with: title, start time, end time, attendees. Do NOT use for creating events or past meetings.',
             'parameters': {
                 'type': 'object',
                 'properties': {},

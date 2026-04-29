@@ -41,4 +41,4 @@ python agent.py
 - [x] Day 4: Mock emails + calendar tools, refactor
 - [x] Day 5: SQLite persistent memory
 - [x] Day 6: Polish, error handling, /commands, system prompt
-- [ ] Day 7: Anthropic prompt engineering tutorial + Week 1 reflection
+- [x] Day 7: Anthropic prompt engineering tutorial + Week 1 reflection
