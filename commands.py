@@ -42,4 +42,8 @@ def handle_command(cmd, messages):
         print()
         return True, messages
 
+    if cmd.startswith('/'):
+        print(f"Unknown command: {cmd}. Type /help for commands.\n")
+        return True, messages
+
     return False, messages
